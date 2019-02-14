@@ -4,7 +4,7 @@ const config = {
   jwtSecret: process.env.JWT_SECRET || "YOUR_secret_key",
   mongoUri: process.env.MONGODB_URI ||
     process.env.MONGO_HOST ||
-    'mongodb://' + (process.env.IP || 'https://young-spire-33030.herokuapp.com') + ':' +
+    'mongodb://' + (process.env.IP || 'localhost') + ':' +
     (process.env.MONGO_PORT || '27017') +
     '/mernproject',
     serverUrl: process.env.serverUrl || 'https://young-spire-33030.herokuapp.com'
