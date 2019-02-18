@@ -10,6 +10,8 @@ import PropTypes from 'prop-types'
 import {withStyles} from 'material-ui/styles'
 import {create} from './api-media.js'
 import {Redirect} from 'react-router-dom'
+import Loader from 'react-loader-spinner'
+
 
 const styles = theme => ({
   card: {
@@ -41,6 +43,13 @@ const styles = theme => ({
   },
   filename:{
     marginLeft:'10px'
+  },
+  loaderWrapper:{
+    margin: 'auto',
+    textAlign: 'center',
+  },
+  loaderPosition:{
+    display: 'inline-block'
   }
 })
 
@@ -51,6 +60,7 @@ class NewMedia extends Component {
       description: '',
       genre: '',
       redirect: false,
+      loadspinner:false,
       error: '',
       mediaId: ''
   }
@@ -59,16 +69,19 @@ class NewMedia extends Component {
   }
 
   clickSubmit = () => {
+
     const jwt = auth.isAuthenticated()
+    this.setState({loadspinner:true})
     create({
       userId: jwt.user._id
     }, {
       t: jwt.token
     }, this.mediaData).then((data) => {
+      console.log("data"+JSON.stringify(data));
       if (data.error) {
-        this.setState({error: data.error})
+        this.setState({error: data.error,loadspinner:false})
       } else {
-        this.setState({redirect: true, mediaId: data._id})
+        this.setState({loadspinner:false,redirect: true, mediaId: data._id})
       }
     })
   }
@@ -92,11 +105,23 @@ class NewMedia extends Component {
 
   render() {
     const {classes} = this.props
-    if (this.state.redirect) {
+    if(this.state.loadspinner){
+      return(
+        <div className={classes.loaderWrapper}>
+        <div className={classes.loaderPosition}>
+        <Loader 
+           type="Oval"
+           color="#00BFFF"
+           height="100"	
+           width="100"
+        /> </div> 
+        </div> 
+       );
+    }
+    else if (this.state.redirect) {
       alert("Video Uploaded Successfully");
       return (<Redirect to={'/'}/>)
-      //return (<Redirect to={'/media/' + this.state.mediaId}/>)
-    }
+     }
     return (
       <Card className={classes.card}>
         <CardContent>
@@ -133,6 +158,11 @@ class NewMedia extends Component {
   <option value="Politics">Politics</option>
   <option value="Television">Television</option>
 </select>
+<br/> {
+            this.state.error && (<Typography component="p" color="error">
+              <Icon color="error" className={classes.error}>error</Icon>
+              {this.state.error}</Typography>)
+          }
         </CardContent>
         <CardActions>
           <Button color="primary" variant="raised" onClick={this.clickSubmit} className={classes.submit}>Submit</Button>

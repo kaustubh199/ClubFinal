@@ -28,10 +28,21 @@ const create = (req, res, next) => {
       }
       let media = new Media(fields)
       media.postedBy= req.profile
-      if(files.video){
+      console.log("files.video "+files.video)
+      
+       if(!files.video)
+        {
+          //console.log("inside if");
+        return res.status(400).json({
+          error: "Video is required"
+        }) 
+      }
+       if(files.video){
+        //console.log("inside else if");
         let writestream = gridfs.createWriteStream({_id: media._id})
         fs.createReadStream(files.video.path).pipe(writestream)
-      }
+      
+      
       media.save((err, result) => {
         if (err) {
           return res.status(400).json({
@@ -40,6 +51,8 @@ const create = (req, res, next) => {
         }
         res.json(result)
       })
+
+    }
     })
 }
 

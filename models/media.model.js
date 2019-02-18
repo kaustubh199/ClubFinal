@@ -5,8 +5,14 @@ const MediaSchema = new mongoose.Schema({
     type: String,
     required: 'title is required'
   },
-  description: String,
-  genre: String,
+  description: {
+    type: String,
+    required: 'description is required'
+  },
+  genre:{
+    type: String,
+    required: 'genre is required'
+  },
   views: {type: Number, default: 0},
   likes: [{type: mongoose.Schema.ObjectId, ref: 'User'}],
   dislikes: [{type: mongoose.Schema.ObjectId, ref: 'User'}],

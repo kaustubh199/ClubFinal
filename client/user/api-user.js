@@ -77,7 +77,24 @@ const follow = (params, credentials, followId) => {
   })
 }
 
+
+
 const unfollow = (params, credentials, unfollowId) => {
+  return fetch('/api/users/unfollowNew/', {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + credentials.t
+    },
+    body: JSON.stringify({userId:params.userId, unfollowId: unfollowId})
+  }).then((response) => {
+    return response.json()
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+const unfollowMerge = (params, credentials, unfollowId) => {
   return fetch('/api/users/unfollow/', {
     method: 'PUT',
     headers: {
@@ -114,5 +131,6 @@ export {
   remove,
   follow,
   unfollow,
-  findPeople
+  findPeople,
+  unfollowMerge
 }

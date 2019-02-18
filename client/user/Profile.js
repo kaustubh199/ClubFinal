@@ -11,7 +11,7 @@ import Edit from 'material-ui-icons/Edit'
 import Divider from 'material-ui/Divider'
 import DeleteUser from './DeleteUser'
 import auth from './../auth/auth-helper'
-import {read} from './api-user.js'
+import {read,mergeFollowers, follow, unfollow,unfollowMerge} from './api-user.js'
 import {Redirect, Link} from 'react-router-dom'
 import FollowProfileButton from './../user/FollowProfileButton'
 import ProfileTabs from './../user/ProfileTabs'
@@ -62,6 +62,7 @@ class Profile extends Component {
         this.setState({redirectToSignin: true})
       } else {
         let following = this.checkFollow(data)
+        //console.log("data "+JSON.stringify(data.followers));
         console.log("calling checkfollow "+JSON.stringify(following)); 
         this.setState({user: data, following: following})
         this.loadPosts(data._id)
@@ -96,8 +97,13 @@ class Profile extends Component {
         return false;
       }
   }
+
+  
   clickFollowButton = (callApi) => {
+
+    console.log("button clicked");
     const jwt = auth.isAuthenticated()
+ 
     callApi({
       userId: jwt.user._id
     }, {
@@ -106,9 +112,36 @@ class Profile extends Component {
       if (data.error) {
         this.setState({error: data.error})
       } else {
-        this.setState({user: data, following: !this.state.following})
+        console.log(" In else after call"+this.state.following);
+        this.setState({user: data, following: !(this.state.following)})
+        console.log(" In else after setState"+this.state.following);
+
+
+
+        /*if(this.state.following)
+        {
+         console.log("In IF following is true"); //make a rest call to mergeTwo arrays 
+
+          unfollowMerge({
+            userId: jwt.user._id
+          }, {
+            t: jwt.token
+          }, this.state.user._id).then((data) => {
+            if (data.error) {
+              this.setState({error: data.error})
+            } else {
+              console.log(" In else after call successfull "+JSON.stringify(data));
+            }
+          })
+
+        }*/
       }
     })
+     
+
+    
+    //console.log("this.state.following "+this.state.following);
+    
   }
 
   loadPosts = (user) => {
