@@ -11,6 +11,7 @@ import {withStyles} from 'material-ui/styles'
 import {create} from './api-media.js'
 import {Redirect} from 'react-router-dom'
 import Loader from 'react-loader-spinner'
+import { relative } from 'path';
 
 
 const styles = theme => ({
@@ -47,9 +48,10 @@ const styles = theme => ({
   loaderWrapper:{
     margin: 'auto',
     textAlign: 'center',
+    paddingTop:'200px'
   },
   loaderPosition:{
-    display: 'inline-block'
+    display: 'inline-block',
   }
 })
 
