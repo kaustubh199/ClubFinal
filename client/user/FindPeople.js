@@ -36,11 +36,30 @@ const styles = theme => ({
     verticalAlign: 'middle'
   }
 })
+
+function searchingFor(term){
+	return function(x){
+		return x.name.toLowerCase().includes(term.toLowerCase()) || !term;
+	}
+}
+
+
+
+
 class FindPeople extends Component {
-  state = {
+  constructor(props){
+		super(props);
+	this.state = {
       users: [],
+	  term:'',
       open: false
-  }
+	}
+	this.searchHandler = this.searchHandler.bind(this);
+	}
+	
+	searchHandler(event){
+		this.setState({term: event.target.value})	
+	}
   componentDidMount = () => {
     const jwt = auth.isAuthenticated()
     findPeople({
@@ -79,12 +98,17 @@ class FindPeople extends Component {
   render() {
     const {classes} = this.props
     return (<div>
+
+<form align = "center">
+<input type="text" placeholder="Search People.."   onChange={this.searchHandler}/>
+</form>
+
       <Paper className={classes.root} elevation={4}>
         <Typography type="title" className={classes.title}>
           Who to follow
         </Typography>
         <List>
-          {this.state.users.map((item, i) => {
+          {this.state.users.filter(searchingFor(this.state.term)).map((item, i) => {
               return <span key={i}>
                 <ListItem>
                   <ListItemAvatar className={classes.avatar}>
