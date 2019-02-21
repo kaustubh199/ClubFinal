@@ -17,7 +17,7 @@ router.route('/api/users/follow')
     .put(authCtrl.requireSignin, userCtrl.addFollowing, userCtrl.addFollower)
 
 router.route('/api/users/unfollow')
-    .put(authCtrl.requireSignin, userCtrl.removeFollower)
+    .put(authCtrl.requireSignin, userCtrl.mergeFollower)
 router.route('/api/users/unfollowNew')
     .put(authCtrl.requireSignin, userCtrl.removeFollowingNew, userCtrl.removeFollowerNew)
 

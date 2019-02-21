@@ -112,13 +112,30 @@ class Profile extends Component {
       if (data.error) {
         this.setState({error: data.error})
       } else {
-        console.log(" In else after call"+this.state.following);
+        //console.log(" In else after call"+this.state.following);
         this.setState({user: data, following: !(this.state.following)})
-        console.log(" In else after setState"+this.state.following);
-
-
-
+        //console.log(" In else after setState"+this.state.following);
         /*if(this.state.following)
+        {
+          //Add Followers Together
+          console.log("Please do not come inside while unfollow");
+          unfollowMerge({
+            userId: jwt.user._id
+          }, {
+            t: jwt.token
+          }, this.state.user._id).then((data) => {
+            if (data.error) {
+              this.setState({error: data.error})
+            } else {
+              console.log(" In else after call successfull "+JSON.stringify(data));
+              this.setState({user: data});
+            }
+          })
+
+        }*/
+
+
+       /* if(this.state.following)
         {
          console.log("In IF following is true"); //make a rest call to mergeTwo arrays 
 
@@ -135,6 +152,9 @@ class Profile extends Component {
           })
 
         }*/
+
+
+
       }
     })
      

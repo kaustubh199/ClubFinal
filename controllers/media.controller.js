@@ -117,7 +117,7 @@ const video = (req, res) => {
 }
 
 const listPopular = (req, res) => {
-  Media.find({}).limit(9)
+  Media.find({}).limit(5)
   .populate('postedBy', '_id name')
   .sort('-views')
   .exec((err, posts) => {
@@ -216,7 +216,7 @@ const remove = (req, res, next) => {
 }
 
 const listRelated = (req, res) => {
-  Media.find({ "_id": { "$ne": req.media }, "genre": req.media.genre}).limit(4)
+  Media.find({ "_id": { "$ne": req.media }, "genre": req.media.genre}).limit(9)
   .sort('-views')
   .populate('postedBy', '_id name')
   .exec((err, posts) => {
@@ -230,7 +230,7 @@ const listRelated = (req, res) => {
 }
 
 const listSportsRelated = (req, res) => {
-  Media.find({ "genre":'Sports'}).limit(6)
+  Media.find({ "genre":'Sports'}).limit(5)
   .sort('-views')
   .populate('postedBy', '_id name')
   .exec((err, posts) => {
@@ -244,7 +244,7 @@ const listSportsRelated = (req, res) => {
 }
 
 const listBollywoodRelated = (req, res) => {
-  Media.find({ "genre":'Bollywood'}).limit(6)
+  Media.find({ "genre":'Bollywood'}).limit(5)
   .sort('-views')
   .populate('postedBy', '_id name')
   .exec((err, posts) => {
@@ -258,7 +258,7 @@ const listBollywoodRelated = (req, res) => {
 }
 
 const listHollywoodRelated = (req, res) => {
-  Media.find({ "genre":'Hollywood'}).limit(6)
+  Media.find({ "genre":'Hollywood'}).limit(5)
   .sort('-views')
   .populate('postedBy', '_id name')
   .exec((err, posts) => {
@@ -272,7 +272,7 @@ const listHollywoodRelated = (req, res) => {
 }
 
 const listPoliticsRelated = (req, res) => {
-  Media.find({ "genre":'Politics'}).limit(6)
+  Media.find({ "genre":'Politics'}).limit(5)
   .sort('-views')
   .populate('postedBy', '_id name')
   .exec((err, posts) => {
@@ -286,7 +286,7 @@ const listPoliticsRelated = (req, res) => {
 }
 
 const listTelevisionRelated = (req, res) => {
-  Media.find({ "genre":'Television'}).limit(6)
+  Media.find({ "genre":'Television'}).limit(5)
   .sort('-views')
   .populate('postedBy', '_id name')
   .exec((err, posts) => {
@@ -301,7 +301,7 @@ const listTelevisionRelated = (req, res) => {
 
 const listGenreRelated = (req, res) => {
   console.log("On Server"+req)
-  Media.find({ "genre":req.genre}).limit(6)
+  Media.find({ "genre":req.genre}).limit(5)
   .sort('-views')
   .populate('postedBy', '_id name')
   .exec((err, posts) => {

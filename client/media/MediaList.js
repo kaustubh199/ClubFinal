@@ -52,7 +52,7 @@ class MediaList extends Component {
     const {classes} = this.props
     return (
       <div className={classes.root}>
-        <GridList className={classes.gridList} cols={3}>
+        <GridList className={classes.gridList} cols={5}>
           {this.props.media.map((tile, i) => (
             <GridListTile key={i} className={classes.tile}>
               <Link to={"/media/"+tile._id}>

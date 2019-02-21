@@ -118,6 +118,28 @@ const addFollowing = (req, res, next) => {
   })
 }
 
+const mergeFollowing = (req, res, next) => {
+  
+  var query2 = User.findOne({ '_id': req.body.userId });
+query2.select('followers');
+
+// execute the query at a later time
+query2.exec(function (err, person) {
+            if (err) return handleError(err);
+            console.log(" Person in mergeFollowing  "+JSON.stringify(person));});
+
+
+  User.findByIdAndUpdate(req.body.userId, {$push: {following: req.body.followId}}, (err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: errorHandler.getErrorMessage(err)
+      })
+    }
+    next()
+  })
+}
+
+
 const addFollower = (req, res) => {
   User.findByIdAndUpdate(req.body.followId, {$push: {followers: req.body.userId}}, {new: true})
   .populate('following', '_id name')
@@ -211,46 +233,45 @@ const removeFollowerNew = (req, res) => {
   })
 }
 
-const removeFollower = (req, res) => {
-
+const mergeFollower = (req, res) => {
 console.log("Here I am");
-
 var query1 = User.findOne({ '_id': req.body.unfollowId });
-
-
 var query2 = User.findOne({ '_id': req.body.userId });
-
-// selecting the `name` and `occupation` fields
 query1.select('followers');
 query2.select('followers');
 
 // execute the query at a later time
 query1.exec(function (err, person) {
-  if (err) return handleError(err);
+            if (err) return handleError(err);
+            console.log("   "+JSON.stringify(person));
+            query2.exec(function (err2, person2) {
+                        if (err2) return handleError(err2);
+                        console.log("   "+JSON.stringify(person2));
+
+ function combine_ids(ids) {
+                          return (ids.length ? "'" + ids.join("','") + "'" : "");} 
+
+  var arr1=person.followers;
+  var arr2=person2.followers;
+  var arrayResult=[...arr1, ...arr2];
+  var arrayCooked = combine_ids(arrayResult);
+  var arraynew = arrayCooked.split(',');
+  console.log(" array "+arraynew);
+  if(Array.isArray(arraynew)){
+  var unique3 = [...new Set(arraynew)];
+  console.log(" unique3 "+unique3);}
+
+ /* unique3.forEach(function(element) {
+    console.log("ok "+element);
+    var query3 = User.findOne({ '_id': element });
+    query3.select('following');
+    query3.exec(function (err3, person3) {
+      if (err3) return err3;
+      console.log("   "+JSON.stringify(person3));});
   
-  console.log("   "+JSON.stringify(person));
+  });*/
 
-  query2.exec(function (err2, person2) {
-    if (err2) return handleError(err2);
-    
-    console.log("   "+JSON.stringify(person2));
-
-    Array.prototype.unique = function() {
-      var a = this.concat();
-      for(var i=0; i<a.length; ++i) {
-          for(var j=i+1; j<a.length; ++j) {
-              if(a[i] === a[j])
-                  a.splice(j--, 1);
-          }
-      }
-  
-      return a;
-  };
-  var arrayResult = person.followers.concat(person2.followers).unique();
-   
- console.log(" arrayResult "+JSON.stringify(arrayResult));
-
- User.findByIdAndUpdate(req.body.unfollowId, {$set: {followers: arrayResult}}, {new: true})
+ User.findByIdAndUpdate(req.body.unfollowId, {$set: {followers: unique3}}, {new: true})
   .populate('following', '_id name')
   .populate('followers', '_id name')
   .exec((err, result) => {
@@ -263,10 +284,11 @@ query1.exec(function (err, person) {
   result.salt = undefined
   res.json(result)
   });
-
+  
   });
 
 });
+
 
 
 
@@ -313,7 +335,8 @@ export default {
   addFollowing,
   addFollower,
   removeFollowing,
-  removeFollower,
+  mergeFollowing,
+  mergeFollower,
   findPeople,
   removeFollowerNew,
   removeFollowingNew 
